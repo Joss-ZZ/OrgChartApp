@@ -1,27 +1,108 @@
-# OrgChartApp
+# Org Chart App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.2.
+## Instalación
 
-## Development server
+No olviden ejecutar el siguiente comando en la terminal para reconstruir los módulos de node e instalar las dependencias:
+```
+	npm install
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Ejecutar el siguiente comando en la terminal para instalar JSON Server:
+```
+	npm install -g json-server
+```
+Crear un archivo "db.json" y pegar lo siguiente:
+```
+{
+    "OrganizationalUnit": [
+        {
+            "id": 1,
+            "brand": "assets/brands/facebook.png",
+            "name": "Facebook",
+            "type": "COMPANY"
+        },
+        {
+            "id": 2,
+            "brand": "assets/brands/twitter.png",
+            "name": "Twitter",
+            "type": "COMPANY",
+            "parentId": 1
+        },
+        {
+            "id": 3,
+            "brand": "assets/brands/instagram.png",
+            "name": "Instagram",
+            "type": "COMPANY",
+            "parentId": 1
+        },
+        {
+            "id": 4,
+            "name": "Directorio",
+            "prefix": "DI",
+            "type": "DEPARTMENT",
+            "parentId": 2,
+            "leaderId": 1
+        },
+        {
+            "id": 5,
+            "name": "Gerencia Mancomunada",
+            "prefix": "GM",
+            "type": "DEPARTMENT",
+            "parentId": 2,
+            "leaderId": 2
+        },
+        {
+            "id": 6,
+            "name": "Planeamiento y Desarrollo",
+            "prefix": "PD",
+            "type": "TEAM",
+            "parentId": 4,
+            "leaderId": 3
+        }
+    ],
+    "Employee": [
+        {
+            "id": 1,
+            "profile": "assets/profile/mariazavaleta.png",
+            "position": "LEADER",
+            "fullname": "María Zavaleta",
+            "job": "Director General",
+            "organizationalUnitId": 4
+          },
+          {
+            "id": 2,
+            "profile": "assets/profile/juanquispe.png",
+            "position": "LEADER",
+            "fullname": "Juan Quispe",
+            "job": "Gerente General",
+            "organizationalUnitId": 5
+          },
+          {
+            "id": 3,
+            "profile": "assets/profile/juanquispe.png",
+            "position": "LEADER",
+            "fullname": "Roberto Gomez",
+            "job": "Jefe de Planeamiento",
+            "organizationalUnitId": 6
+          },
+          {
+            "id": 4,
+            "profile": "assets/profile/mariazavaleta.png",
+            "position": "COLLABORATOR",
+            "fullname": "Sabrina Qin",
+            "job": "Diseñador",
+            "organizationalUnitId": 6
+          }
+    ]
+  }
+```
 
-## Code scaffolding
+Abrir otra ventana de la terminal, navegar hacia la carpeta en donde se encuentra su archivo "db.json" y ejecutar el siguiente comando:
+```
+json-server --watch db.json
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Abrir otra ventana de la terminal y ejecutar la aplicación:
+```
+ng serve -o
+```
