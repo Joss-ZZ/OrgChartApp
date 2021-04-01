@@ -1,0 +1,105 @@
+<form autocomplete="off" [formGroup]="miForm" (ngSubmit)="add()" *ngIf="type === 'COMPANY'">
+
+    <div class="form-grid">
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Nombre:</mat-label>
+                <input matInput
+                       formControlName="name"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Imagen:</mat-label>
+                <input matInput
+                       formControlName="brand"  
+                       type="text">
+            </mat-form-field>
+        </div>
+    
+    </div>
+
+    <div class="form-action">
+
+        <button mat-raised-button 
+                type="button"
+                (click)="close()"
+                color="warn">
+            Cerrar
+        </button>
+
+        <button mat-raised-button 
+                type="submit"
+                color="primary"
+                [disabled]="miForm.invalid">
+            Agregar
+        </button>
+
+    </div>
+
+</form>
+
+<form autocomplete="off" [formGroup]="miForm2" (ngSubmit)="add()" *ngIf="type !== 'COMPANY'">
+
+    <div class="form-grid">
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Prefix:</mat-label>
+                <input matInput
+                       formControlName="prefix"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Nombre del {{type}}:</mat-label>
+                <input matInput
+                       formControlName="name"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Foto del Lider:</mat-label>
+                <input matInput
+                       formControlName="profile"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Nombre completo del Lider:</mat-label>
+                <input matInput
+                       formControlName="fullname"  
+                       type="text">
+            </mat-form-field>
+        </div>
+    
+    </div>
+
+    <div class="form-action">
+
+        <button mat-raised-button 
+                type="button"
+                (click)="close()"
+                color="warn">
+            Cerrar
+        </button>
+
+        <button mat-raised-button 
+                type="submit"
+                color="primary"
+                [disabled]="miForm2.invalid">
+            Agregar
+        </button>
+
+    </div>
+
+</form>

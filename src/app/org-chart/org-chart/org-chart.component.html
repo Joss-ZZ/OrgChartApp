@@ -1,0 +1,74 @@
+
+
+<ngx-graph
+[view]="[1200, 600]"
+[links]="links"
+[nodes]="nodes"
+[curve]="curve"
+[layout]="layout"
+[nodeWidth]="500"
+[nodeHeight]="340"
+[layoutSettings]="layoutSettings"
+[enableZoom]="true"
+[autoZoom]="true"
+>
+<ng-template #defsTemplate>
+  <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+    <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+  </svg:marker>
+</ng-template>
+
+<ng-template #nodeTemplate let-node>
+  <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="500" height="340">
+    <svg:foreignObject width="500" height="340" class="container">
+      <xhtml:div class="container" [id]="'node'+node.id">
+
+        <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngClass]="((node.data.type === 'COMPANY') || (node.data.position === 'COLLABORATOR'))?'marginbottom':''">
+
+            <!-- Barra lateral con el color dinámico -->
+            <xhtml:div class="lateral company" *ngIf="node.data.type==='COMPANY'"></xhtml:div> 
+            <xhtml:div class="lateral department" *ngIf="node.data.type==='DEPARTMENT'"></xhtml:div> 
+            <xhtml:div class="lateral team" *ngIf="node.data.type==='TEAM'"></xhtml:div> 
+            <xhtml:div class="lateral collaborator" *ngIf="node.data.position==='COLLABORATOR'"></xhtml:div>
+            <!-- Fin Barra lateral -->
+
+            <!-- Mostramos el formulario reactivo que querramos de acuerdo a si es una organización o colaborador -->
+            <app-card-form-organizationalunit *ngIf="node.data.type" [node]="node"></app-card-form-organizationalunit>
+            <app-card-form-employee *ngIf="node.data.position === 'COLLABORATOR'" [node]="node"></app-card-form-employee>
+            <!-- Fin del form reactivo -->
+
+            <!-- Botón de acciones-->
+            <xhtml:div class="cardContainer-actions" *ngIf="node.data.type">
+              <xhtml:div class="cardContainer-actions-icon" (click)="delete(node)">
+                <i class="fas fa-times"></i>
+              </xhtml:div>
+              <xhtml:div class="cardContainer-actions-icon">
+                <i class="fas fa-chevron-down"></i>
+              </xhtml:div>
+              <xhtml:div class="cardContainer-actions-icon" (click)="add(node)">
+                <i class="fas fa-plus"></i>
+              </xhtml:div>
+            </xhtml:div>
+            <xhtml:div class="cardContainer-actions" style="left: calc(50% - 20px); border-radius: 50%;" *ngIf="node.data.position === 'COLLABORATOR'">
+              <xhtml:div class="cardContainer-actions-icon" (click)="delete(node)">
+                <i class="fas fa-times"></i>
+              </xhtml:div>
+            </xhtml:div>
+            <!-- Fin de botón de acciones-->
+
+        </xhtml:div>
+
+      </xhtml:div>
+    </svg:foreignObject>
+  </svg:g>
+</ng-template>
+
+<ng-template #linkTemplate let-link>
+
+  <svg:g class="edge">
+    <svg:path class="line" stroke-width="3" marker-end="url(#arrow)"></svg:path>
+  </svg:g>
+
+</ng-template>
+</ngx-graph>
+

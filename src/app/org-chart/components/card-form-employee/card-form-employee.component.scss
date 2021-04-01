@@ -1,0 +1,42 @@
+//size
+$brand-tam: 140px;
+//color
+$color-border: #8A8A8A;
+$color-type: #A1A1A1;
+
+.img-container{
+    border-radius: 50%;
+    border: 2px solid $color-border;
+    width: $brand-tam;
+    height: $brand-tam;
+    position: absolute;
+    top: -90px;
+    left: calc(50% - 70px);
+    overflow: hidden;
+    img{
+      width: 100%;
+    }
+}
+
+.container-info{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 25px 25px 50px;
+  position: relative;
+}
+
+.type{
+  margin-bottom: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  color: $color-type;
+}
+
+.name{
+  margin-bottom: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  border: none;
+  outline: none;
+}

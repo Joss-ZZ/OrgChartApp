@@ -1,0 +1,11 @@
+
+
+<form autocomplete="off" [formGroup]="miForm">
+    <div class="img-container">
+        <img [src]="node.data.profile" [alt]="node.data.fullname">
+    </div>
+    <div class="container-info">
+        <label for="" class="type">{{node.data.position}}</label>
+        <input type="text" class="name" formControlName="fullname" (blur)="update($event.target.value)">
+    </div>
+</form>

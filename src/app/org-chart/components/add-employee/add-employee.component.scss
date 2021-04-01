@@ -1,0 +1,18 @@
+mat-form-field{
+    width: 100%;
+}
+
+.form-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-column-gap: 15px;
+}
+
+.form-action{
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    button{
+        margin-left: 10px;
+    }
+}

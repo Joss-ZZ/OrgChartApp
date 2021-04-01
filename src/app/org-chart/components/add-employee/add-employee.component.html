@@ -1,0 +1,52 @@
+<form autocomplete="off" [formGroup]="miForm" (ngSubmit)="add()">
+
+    <div class="form-grid">
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Foto del Colaborador:</mat-label>
+                <input matInput
+                       formControlName="profile"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Nombre completo del Colaborador:</mat-label>
+                <input matInput
+                       formControlName="fullname"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Rol del Colaborador:</mat-label>
+                <input matInput
+                       formControlName="job"  
+                       type="text">
+            </mat-form-field>
+        </div>
+    
+    </div>
+
+    <div class="form-action">
+
+        <button mat-raised-button 
+                type="button"
+                (click)="close()"
+                color="warn">
+            Cerrar
+        </button>
+
+        <button mat-raised-button 
+                type="submit"
+                color="primary"
+                [disabled]="miForm.invalid">
+            Agregar
+        </button>
+
+    </div>
+
+</form>

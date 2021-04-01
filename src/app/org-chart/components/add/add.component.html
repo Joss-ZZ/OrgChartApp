@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="container-title">
+        <h2>
+            Agregar
+        </h2>
+    </div>
+    <div class="container-body">
+
+        <div class="actions" [ngSwitch]="data.data.type">
+
+            <div class="opt1" *ngSwitchCase="'COMPANY'">
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Seleccione una opción</mat-label>
+                    <mat-select [(value)]="selectedValue">
+                      <mat-option value='COMPANY'>COMPANY</mat-option>
+                      <mat-option value='DEPARTMENT'>DEPARTMENT</mat-option>
+                      <mat-option value='TEAM'>TEAM</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="actions-org" *ngIf="selectedValue">
+                    <app-add-organizationalunit [data]="data" [type]="selectedValue"></app-add-organizationalunit>
+                </div>
+
+            </div>
+            <div class="opt2" *ngSwitchCase="'DEPARTMENT'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Seleccione una opción</mat-label>
+                    <mat-select [(value)]="selectedValue">
+                      <mat-option value='DEPARTMENT'>DEPARTMENT</mat-option>
+                      <mat-option value='TEAM'>TEAM</mat-option>
+                      <mat-option value='COLLABORATOR'>COLLABORATOR</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="actions-org" *ngIf="selectedValue === 'COLLABORATOR'">
+                    <app-add-employee [data]="data" [type]="selectedValue"></app-add-employee>
+                </div>
+                <div class="actions-org" *ngIf="(selectedValue === 'DEPARTMENT') || (selectedValue === 'TEAM')">
+                    <app-add-organizationalunit [data]="data" [type]="selectedValue"></app-add-organizationalunit>
+                </div>
+            </div>
+            <div class="opt3" *ngSwitchCase="'TEAM'">
+                <app-add-employee [data]="data" [type]="'COLLABORATOR'"></app-add-employee>
+            </div>
+
+        </div>
+
+        <div class="form-action" *ngIf="!selectedValue && (data.data.type !== 'TEAM')">
+
+            <button mat-raised-button 
+                    type="button"
+                    (click)="close()"
+                    color="warn">
+                Cerrar
+            </button>
+    
+        </div>
+
+    </div>
+</div>

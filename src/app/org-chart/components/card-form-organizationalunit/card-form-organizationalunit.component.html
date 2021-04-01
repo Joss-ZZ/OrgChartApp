@@ -1,0 +1,25 @@
+<div [ngSwitch]="node.data.type">
+
+    <form autocomplete="off" [formGroup]="miForm" *ngSwitchCase="'COMPANY'">
+        <div class="img-container">
+            <img [src]="node.data.brand" [alt]="node.data.name">
+        </div>
+        <div class="container-info">
+            <label for="" class="type">{{node.data.type}}</label>
+            <input type="text" class="name" formControlName="name" (blur)="update($event.target.value)">
+        </div>
+    </form>
+
+    <form autocomplete="off" [formGroup]="miForm2" *ngSwitchDefault>
+        <div class="img-container">
+            <img [src]="node.data.profile" [alt]="node.data.fullname">
+        </div>
+        <div class="container-info">
+            <label for="" class="type">{{node.data.position}}</label>
+            <input type="text" class="name" formControlName="fullname" (blur)="update($event.target.value)">
+            <label for="" class="type">{{node.data.type}}</label>
+            <input type="text" class="name" formControlName="name" (blur)="update($event.target.value)">
+        </div>
+    </form>
+
+</div>
