@@ -20,7 +20,7 @@
                 </mat-form-field>
 
                 <div class="actions-org" *ngIf="selectedValue">
-                    <app-add-organizationalunit [data]="data" [type]="selectedValue"></app-add-organizationalunit>
+                    <app-add-organizationalunit [data]="data" [type]="selectedValue" (onActionClick)="addNode($event)"></app-add-organizationalunit>
                 </div>
 
             </div>
@@ -35,14 +35,14 @@
                 </mat-form-field>
 
                 <div class="actions-org" *ngIf="selectedValue === 'COLLABORATOR'">
-                    <app-add-employee [data]="data" [type]="selectedValue"></app-add-employee>
+                    <app-add-employee [data]="data" (onActionClick)="addNode($event)"></app-add-employee>
                 </div>
                 <div class="actions-org" *ngIf="(selectedValue === 'DEPARTMENT') || (selectedValue === 'TEAM')">
-                    <app-add-organizationalunit [data]="data" [type]="selectedValue"></app-add-organizationalunit>
+                    <app-add-organizationalunit [data]="data" [type]="selectedValue" (onActionClick)="addNode($event)"></app-add-organizationalunit>
                 </div>
             </div>
             <div class="opt3" *ngSwitchCase="'TEAM'">
-                <app-add-employee [data]="data" [type]="'COLLABORATOR'"></app-add-employee>
+                <app-add-employee [data]="data" (onActionClick)="addNode($event)"></app-add-employee>
             </div>
 
         </div>

@@ -25,7 +25,7 @@ export class OrganizationalunitService {
     return this.http.delete<IOrganizationalUnit>(`${this.baseUrl}/${id}`);
   }
 
-  updateOrganizationalUnit(id: string, organizationalunit: IOrganizationalUnit): Observable<IOrganizationalUnit> {
+  updateOrganizationalUnit(id: number, organizationalunit: IOrganizationalUnit): Observable<IOrganizationalUnit> {
     return this.http.put<IOrganizationalUnit>(`${this.baseUrl}/${id}`, organizationalunit);
   }
 

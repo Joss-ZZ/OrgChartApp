@@ -145,7 +145,15 @@ export class OrgChartComponent implements OnInit {
           return;
         }
 
-        //Lógica para agregar nodos
+        if(resp.res === 0){
+          this.organizationalUnit.push(resp.resp);
+        }else if(resp.res === 1){
+          this.organizationalUnit.push(resp.organizational);
+          this.employees.push(resp.employee);
+        }else if(resp.res === 2){
+          this.employees.push(resp.resp);
+        }
+        this.dibujarDiagram();
 
       });
   }

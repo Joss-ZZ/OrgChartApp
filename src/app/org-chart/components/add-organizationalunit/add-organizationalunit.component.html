@@ -1,4 +1,4 @@
-<form autocomplete="off" [formGroup]="miForm" (ngSubmit)="add()" *ngIf="type === 'COMPANY'">
+<form autocomplete="off" [formGroup]="miForm" (ngSubmit)="addCompany()" *ngIf="type === 'COMPANY'">
 
     <div class="form-grid">
 
@@ -19,6 +19,7 @@
                        type="text">
             </mat-form-field>
         </div>
+        
     
     </div>
 
@@ -42,7 +43,7 @@
 
 </form>
 
-<form autocomplete="off" [formGroup]="miForm2" (ngSubmit)="add()" *ngIf="type !== 'COMPANY'">
+<form autocomplete="off" [formGroup]="miForm2" (ngSubmit)="addTeamDepartment()" *ngIf="type !== 'COMPANY'">
 
     <div class="form-grid">
 
@@ -78,6 +79,15 @@
                 <mat-label>Nombre completo del Lider:</mat-label>
                 <input matInput
                        formControlName="fullname"  
+                       type="text">
+            </mat-form-field>
+        </div>
+
+        <div class="grid-item">
+            <mat-form-field class="example-full-field">
+                <mat-label>Rol del Lider:</mat-label>
+                <input matInput
+                       formControlName="job"  
                        type="text">
             </mat-form-field>
         </div>
