@@ -12,6 +12,7 @@ import { AddOrganizationalunitComponent } from './components/add-organizationalu
 import { AddComponent } from './components/add/add.component';
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 import { CardFormEmployeeComponent } from './components/card-form-employee/card-form-employee.component';
+import { DeleteAlertComponent } from './components/delete-alert/delete-alert.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CardFormEmployeeComponent } from './components/card-form-employee/card-
     AddOrganizationalunitComponent,
     AddComponent,
     AddEmployeeComponent,
-    CardFormEmployeeComponent
+    CardFormEmployeeComponent,
+    DeleteAlertComponent
   ],
   exports: [
     OrgChartComponent

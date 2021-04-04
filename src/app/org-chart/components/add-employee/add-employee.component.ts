@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IEmployee } from '../../interfaces/IEmployee';
 import { UtilsService } from '../../utils/utils.service';
 import { EmployeeService } from '../../services/employee.service';
+import { OrganizationalunitService } from '../../services/organizationalunit.service';
+import { IOrganizationalUnit } from '../../interfaces/IOrganizationalUnit';
 
 @Component({
   selector: 'app-add-employee',
@@ -19,6 +21,10 @@ export class AddEmployeeComponent implements OnInit {
   });
 
   employee: IEmployee;
+  org: IOrganizationalUnit = {
+    collaboratorIdList: []
+  };
+
   position: string = 'COLLABORATOR'
 
   @Input() data: Node;
@@ -26,9 +32,12 @@ export class AddEmployeeComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private employeeService: EmployeeService,
+              private organizationalunitService: OrganizationalunitService,
               private utilsService: UtilsService) { }
 
   ngOnInit(): void {
+    this.org.collaboratorIdList = this.data.data.collaboratorIdList || [];
+    console.log(this.org);
   }
 
   add(){
@@ -37,8 +46,16 @@ export class AddEmployeeComponent implements OnInit {
       this.employee.position = this.position;
       this.employee.organizationalUnitId = this.utilsService.splitID(this.data.id);
       this.employeeService.addEmployee(this.employee)
-        .subscribe(resp => {
-          this.onActionClick.emit({resp, res: 2});
+        .subscribe(collaborator => {
+          if(collaborator){
+            this.org.collaboratorIdList.push(collaborator.id);
+            console.log(this.org);
+            const Id = this.utilsService.splitID(this.data.id);
+            this.organizationalunitService.updateOrganizationalUnit(Id, this.org)
+              .subscribe(organizational => {
+                this.onActionClick.emit({collaborator, organizational, res: 2});
+              });
+          }
         });
     }
   }

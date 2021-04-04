@@ -55,12 +55,12 @@ export class AddOrganizationalunitComponent implements OnInit {
     this.organizationalUnit.type = this.type;
     this.organizationalUnit.parentId = this.utilsService.splitID(this.data.id);
     this.organizationalunitService.addOrganizationalUnit(this.organizationalUnit)
-      .subscribe(resp => {
-        this.onActionClick.emit({resp, res: 0});
+      .subscribe(organizational => {
+        this.onActionClick.emit({organizational, res: 0});
       }); 
   }
 
-  addTeamDepartment(){
+  addTeamOrDepartment(){
     if(!this.miForm2.valid){
       return;
     }
@@ -70,14 +70,14 @@ export class AddOrganizationalunitComponent implements OnInit {
     this.organizationalUnit = {prefix, name};
     this.organizationalUnit.type = this.type;
     this.organizationalUnit.parentId = this.utilsService.splitID(this.data.id);
-    this.organizationalunitService.addOrganizationalUnit(this.organizationalUnit)
+    this.organizationalunitService.addOrganizationalUnit(this.organizationalUnit) // add DEPARTMENT or TEAM
     .subscribe(org => {
-      if(org){
+      if(org){ 
         this.employee.organizationalUnitId = org.id;
-        this.employeeService.addEmployee(this.employee)
-          .subscribe(employee => {
+        this.employeeService.addEmployee(this.employee) // add employee LEADER
+          .subscribe(employee => {  
             org.leaderId = employee.id;
-            this.organizationalunitService.updateOrganizationalUnit(org.id, org)
+            this.organizationalunitService.updateOrganizationalUnit(org.id, org) // add leaderId field in DEPARTMENT or TEAM
               .subscribe(organizational => {
                 this.onActionClick.emit({employee, organizational, res: 1});
               });

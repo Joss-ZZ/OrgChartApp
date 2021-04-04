@@ -21,11 +21,11 @@ export class EmployeeService {
     return this.http.post<IEmployee>(`${this.baseUrl}`, employee);
   }
 
-  deleteEmployee(id: string): Observable<IEmployee>{
+  deleteEmployee(id: number): Observable<IEmployee>{
     return this.http.delete<IEmployee>(`${this.baseUrl}/${id}`);
   }
 
-  updateEmployee(id: string, employee: IEmployee): Observable<IEmployee> {
+  updateEmployee(id: number, employee: IEmployee): Observable<IEmployee> {
     return this.http.put<IEmployee>(`${this.baseUrl}/${id}`, employee);
   }
 

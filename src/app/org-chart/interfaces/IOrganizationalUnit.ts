@@ -7,5 +7,5 @@ export interface IOrganizationalUnit {
     type?                : string,
     parentId?            : number,
     leaderId?            : number,
-    collaboratorIdList?  : string[]
+    collaboratorIdList?  : number[]
 }

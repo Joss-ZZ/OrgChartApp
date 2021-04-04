@@ -1,0 +1,12 @@
+<h3>¿Estás seguro?</h3>
+<hr>
+<p>
+    Estás a punto de borrar a <span>{{data.label}}</span>
+    <br>
+    ¿Desea continuar?
+</p>
+
+<div class="accion">
+    <button mat-raised-button (click)="borrar()" color="warn">Sí, borrar</button>
+    <button mat-raised-button (click)="cerrar()" color="primary">Cancelar</button>
+</div>

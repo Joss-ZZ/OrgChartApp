@@ -21,12 +21,12 @@ export class OrganizationalunitService {
     return this.http.post<IOrganizationalUnit>(`${this.baseUrl}`, organizationalunit);
   }
 
-  deleteOrganizationalUnit(id: string): Observable<IOrganizationalUnit>{
+  deleteOrganizationalUnit(id: number): Observable<IOrganizationalUnit>{
     return this.http.delete<IOrganizationalUnit>(`${this.baseUrl}/${id}`);
   }
 
   updateOrganizationalUnit(id: number, organizationalunit: IOrganizationalUnit): Observable<IOrganizationalUnit> {
-    return this.http.put<IOrganizationalUnit>(`${this.baseUrl}/${id}`, organizationalunit);
+    return this.http.patch<IOrganizationalUnit>(`${this.baseUrl}/${id}`, organizationalunit);
   }
 
 }
