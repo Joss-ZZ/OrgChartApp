@@ -19,10 +19,10 @@ export class UtilsService {
     return id;
   }
 
-  RemoveLeaderAndCollaboratorAndOrganizational(
+  RemoveLeaderAndCollaboratorAndOrganizational(eliminar: boolean,
     organizationalUnitsID: number[], employeesID: number[], organizationalUnit: IOrganizationalUnit[], indiceOrg: number, employees: IEmployee[]): IEmployee[]{
     organizationalUnitsID.push(organizationalUnit[indiceOrg].id);
-    if(organizationalUnit[indiceOrg].leaderId){ // Verificamos si se trata de un DEPARTMENT o TEAM para filtrar sus líderes.
+    if(organizationalUnit[indiceOrg].leaderId && eliminar){ // Verificamos si se trata de un DEPARTMENT o TEAM para filtrar sus líderes.
       employeesID.push(organizationalUnit[indiceOrg].leaderId);
       employees = employees.filter(employee => employee.id !== organizationalUnit[indiceOrg].leaderId);
     }
@@ -32,18 +32,10 @@ export class UtilsService {
         employees = employees.filter(employee => employee.id !== collaboratorId);
       });
     }
-    organizationalUnit.splice(indiceOrg, 1);
-    return employees;
-  }
-
-  captureIDs(
-    organizationalUnitsID: number[], employeesID: number[], organizationalUnit: IOrganizationalUnit[], indiceOrg: number){
-    organizationalUnitsID.push(organizationalUnit[indiceOrg].id);
-    if(organizationalUnit[indiceOrg].collaboratorIdList){ // Si la Organización tiene COLLABORATORS entonces recorremos y añadimos a nuestro array de empleados      
-      organizationalUnit[indiceOrg].collaboratorIdList.forEach((collaboratorId) => {
-        employeesID.push(collaboratorId);
-      });
+    if(eliminar){
+      organizationalUnit.splice(indiceOrg, 1);
     }
+    return employees;
   }
 
 }
