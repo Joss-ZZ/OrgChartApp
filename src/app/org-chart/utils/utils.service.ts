@@ -36,4 +36,14 @@ export class UtilsService {
     return employees;
   }
 
+  captureIDs(
+    organizationalUnitsID: number[], employeesID: number[], organizationalUnit: IOrganizationalUnit[], indiceOrg: number){
+    organizationalUnitsID.push(organizationalUnit[indiceOrg].id);
+    if(organizationalUnit[indiceOrg].collaboratorIdList){ // Si la Organización tiene COLLABORATORS entonces recorremos y añadimos a nuestro array de empleados      
+      organizationalUnit[indiceOrg].collaboratorIdList.forEach((collaboratorId) => {
+        employeesID.push(collaboratorId);
+      });
+    }
+  }
+
 }

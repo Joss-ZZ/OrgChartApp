@@ -1,4 +1,10 @@
-
+<div class="graph-setting">
+  <button mat-stroked-button color="primary" class="button" (click)="acercar()">+</button>
+  <button mat-stroked-button color="primary" class="button" (click)="alejar()">-</button>
+  <button mat-stroked-button color="primary" class="button" (click)="center$.next(true)">Center</button>
+  <button mat-stroked-button color="primary" class="button" (click)="zoomToFit$.next(true)">Zoom to fit</button>
+  {{variable}}
+</div>
 
 <ngx-graph
 [view]="[1200, 600]"
@@ -11,7 +17,15 @@
 [layoutSettings]="layoutSettings"
 [enableZoom]="true"
 [autoZoom]="false"
+[animate]="true"
+[center$]="center$"
+[zoomToFit$]="zoomToFit$"
+[zoomLevel]="variable"
+[showMiniMap]="true"
+[miniMapMaxWidth]="200"
+[miniMapMaxHeight]="200"
 >
+
 <ng-template #defsTemplate>
   <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
     <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
@@ -39,14 +53,14 @@
 
             <!-- Botón de acciones-->
             <xhtml:div class="cardContainer-actions" *ngIf="node.data.type">
-              <xhtml:div class="cardContainer-actions-icon" (click)="delete(node)">
-                <i class="fas fa-times"></i>
-              </xhtml:div>
-              <xhtml:div class="cardContainer-actions-icon">
-                <i class="fas fa-chevron-down"></i>
-              </xhtml:div>
               <xhtml:div class="cardContainer-actions-icon" (click)="add(node)">
                 <i class="fas fa-plus"></i>
+              </xhtml:div>
+              <xhtml:div class="cardContainer-actions-icon" (click)="hide(node)">
+                <i class="fas fa-chevron-down"></i>
+              </xhtml:div>
+              <xhtml:div class="cardContainer-actions-icon" (click)="delete(node)">
+                <i class="fas fa-times"></i>
               </xhtml:div>
             </xhtml:div>
             <xhtml:div class="cardContainer-actions" style="left: calc(50% - 20px); border-radius: 50%;" *ngIf="node.data.position === 'COLLABORATOR'">
@@ -71,4 +85,3 @@
 
 </ng-template>
 </ngx-graph>
-

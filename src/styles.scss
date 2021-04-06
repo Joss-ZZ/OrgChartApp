@@ -6,3 +6,17 @@ body{
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.hide {
+    display: none !important;
+}
+
+.animationHide {
+    animation: animarHide .2s alternate infinite;
+}
+
+@keyframes animarHide {
+    0%    {transform: translateY(-3px);}
+    50%   {transform: translateY(0px);}
+    100%   {transform: translateY(3px);}
+}

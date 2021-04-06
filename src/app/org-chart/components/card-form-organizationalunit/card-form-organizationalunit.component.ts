@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Node } from '@swimlane/ngx-graph';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-card-form-organizationalunit',
@@ -19,16 +19,14 @@ export class CardFormOrganizationalunitComponent implements OnInit {
   ngOnInit(): void {
     if(this.node.data.type === 'COMPANY'){
       this.miForm = this.fb.group({
-        brand: [this.node.data.brand],
-        name: [this.node.data.name]
+        // brand: [this.node.data.brand],
+        name: [this.node.data.name, [Validators.required]]
       });
     }else{
       this.miForm2 = this.fb.group({
-        profile: [this.node.data.profile],
-        type: [this.node.data.type],
-        prefix: [this.node.data.prefix],
+        // profile: [this.node.data.profile],
+        // prefix: [this.node.data.prefix],
         name: [this.node.data.name],
-        position: [this.node.data.position],
         fullname: [this.node.data.fullname]
       });
     }
@@ -36,6 +34,14 @@ export class CardFormOrganizationalunitComponent implements OnInit {
 
   update(event: string){
 
+  }
+
+  updateCompany(event: string){
+    if(!this.miForm.valid){
+      console.log('El campo no puede estar vacío');
+      return;
+    }
+    console.log(this.miForm.value);
   }
 
 }

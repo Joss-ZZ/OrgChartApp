@@ -106,3 +106,8 @@ $btn-guardar:rgb(74,211,149);
   .marginbottom{
     margin-bottom: 60px!important;
   }
+
+  .graph-setting{
+    display: flex;
+    flex-direction: column;
+  }
