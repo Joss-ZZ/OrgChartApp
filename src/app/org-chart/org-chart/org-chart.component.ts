@@ -147,6 +147,7 @@ export class OrgChartComponent implements OnInit {
     // console.log(this.organizationalUnit);
     [...this.nodes];
     [...this.links];
+
   }
 
   hide(node: Node){
@@ -171,6 +172,7 @@ export class OrgChartComponent implements OnInit {
       }
     }
     this.dibujarDiagram(this.employees2, this.organizationalUnit2);
+    
   }
 
   delete(node: Node){
