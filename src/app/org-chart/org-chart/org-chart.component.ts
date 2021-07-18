@@ -25,7 +25,9 @@ export class OrgChartComponent implements OnInit {
 
   variable: number;
   organizationalUnit: IOrganizationalUnit[] = [];
+  organizationalUnit2: IOrganizationalUnit[] = [];
   employees: IEmployee[] = [];
+  employees2: IEmployee[] = [];
 
   public nodes: Node[] = [];
   public links: Edge[] = [];
@@ -48,23 +50,25 @@ export class OrgChartComponent implements OnInit {
     this.organizationalunitService.getOrganizationalUnit()
     .subscribe(resp=> {
       this.organizationalUnit = resp
+      this.organizationalUnit2 = resp;
       this.employeeService.getEmployees()
         .subscribe(resp=> {
           this.employees = resp, 
-          this.dibujarDiagram();
+          this.employees2 = resp,
+          this.dibujarDiagram(this.employees, this.organizationalUnit);
         });
     });
   }
 
 
-  dibujarDiagram(){
+  dibujarDiagram(employees: IEmployee[], organizationalUnit: IOrganizationalUnit[]){
     this.nodes = [];
     this.links = [];
     //Filtramos y separamos en dos arreglos(Líderes y Colaboradores)
-    let leaders: IEmployee[] = this.employees.filter(employee => employee.position === 'LEADER');
-    let collaborators: IEmployee[] = this.employees.filter(employee => employee.position === 'COLLABORATOR');
+    let leaders: IEmployee[] = employees.filter(employee => employee.position === 'LEADER');
+    let collaborators: IEmployee[] = employees.filter(employee => employee.position === 'COLLABORATOR');
 
-    for (const orgUnit of this.organizationalUnit) {
+    for (const orgUnit of organizationalUnit) {
       if(orgUnit.type === 'COMPANY'){
         const node: Node = {
           id: `organizationalUnit-${orgUnit.id}`,
@@ -117,7 +121,7 @@ export class OrgChartComponent implements OnInit {
       this.nodes.push(node);
     }
 
-    for (const orgUnit of this.organizationalUnit) {
+    for (const orgUnit of organizationalUnit) {
       if (!orgUnit.parentId) {
         continue;
       }
@@ -143,8 +147,7 @@ export class OrgChartComponent implements OnInit {
     // console.log(this.organizationalUnit);
     [...this.nodes];
     [...this.links];
-    this.zoomToFit$.next(true);
-    this.center$.next(true);
+
   }
 
   hide(node: Node){
@@ -152,58 +155,24 @@ export class OrgChartComponent implements OnInit {
     const organizationalUnitsID: number[] = [];
     const employeesID: number[] = [];
     let band: boolean = false;
-    for(let i = 0; i<this.organizationalUnit.length; i++){
-      if(!band && this.organizationalUnit[i].id === idNode){
-        this.utilsService.captureIDs(organizationalUnitsID, employeesID, this.organizationalUnit, i);
+    for(let i = 0; i<this.organizationalUnit2.length; i++){
+      if(!band && this.organizationalUnit2[i].id === idNode){
+        this.employees2 = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(false, organizationalUnitsID, employeesID, this.organizationalUnit2, i, this.employees2);
         band = true;
+        continue;
       }
-      if(band && this.organizationalUnit[i]){
+      if(band && this.organizationalUnit2[i]){
         for(let j = 0; j<organizationalUnitsID.length; j++){
-          if(this.organizationalUnit[i].parentId === organizationalUnitsID[j]){
-            this.utilsService.captureIDs(organizationalUnitsID, employeesID, this.organizationalUnit, i);
+          if(this.organizationalUnit2[i].parentId === organizationalUnitsID[j]){
+            this.employees2 = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit2, i, this.employees2);
+            i--;
             break;
           }
         }
       }
     }
-
-    console.log(organizationalUnitsID);
-    console.log(employeesID);
-    if(organizationalUnitsID.length === 1 && employeesID.length === 0){
-      return;
-    }
-
-    organizationalUnitsID.forEach((org, index)=> {
-      if(index>=1){
-        const orgCards = document.getElementById(`organizationalUnit-${org}`);
-        const orgLinks = document.querySelector(`.links #Org-${org}`);
-        if(orgCards.classList.contains('hide')){
-          orgCards.classList.remove('hide');
-          orgLinks.classList.remove('hide');
-        }else{
-          orgCards.classList.add('hide');
-          orgLinks.classList.add('hide');
-        }
-      }else{
-        const nodeParent = document.querySelector(`#organizationalUnit-${org} .fa-chevron-down`);
-        if(nodeParent.classList.contains('animationHide')){
-          nodeParent.classList.remove('animationHide');
-        }else{
-          nodeParent.classList.add('animationHide');
-        }
-      }
-    });
-    employeesID.forEach((org)=> {
-      const empCards = document.getElementById(`employee-${org}`);
-      const empLinks = document.querySelector(`.links #Emp-${org}`);
-      if(empCards.classList.contains('hide')){
-        empCards.classList.remove('hide');
-        empLinks.classList.remove('hide');
-      }else{
-        empCards.classList.add('hide');
-        empLinks.classList.add('hide');
-      }
-    });
+    this.dibujarDiagram(this.employees2, this.organizationalUnit2);
+    
   }
 
   delete(node: Node){
@@ -235,7 +204,7 @@ export class OrgChartComponent implements OnInit {
             .subscribe(resp => {
               this.employees = this.employees.filter(employee => employee.id !== idNode);
               this.organizationalunitService.updateOrganizationalUnit(org.id, organizationalUnit)
-                .subscribe(resp2=> this.dibujarDiagram());
+                .subscribe(resp2=> this.dibujarDiagram(this.employees, this.organizationalUnit));
             });
         }        
       });
@@ -263,7 +232,7 @@ export class OrgChartComponent implements OnInit {
           const indexOrganizational = this.organizationalUnit.findIndex(organizationalunit => organizationalunit.id === resp.organizational.id);
           this.organizationalUnit[indexOrganizational] = resp.organizational;
         }
-        this.dibujarDiagram(); // Draw the changes
+        this.dibujarDiagram(this.employees, this.organizationalUnit); // Draw the changes
       });
   }
 
@@ -273,13 +242,13 @@ export class OrgChartComponent implements OnInit {
     let band: boolean = false;
     for(let i = 0; i<this.organizationalUnit.length; i++){
       if(!band && this.organizationalUnit[i].id === idNode){
-        this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
+        this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
         band = true;
       }
       if(band && this.organizationalUnit[i]){
         for(let j = 0; j<organizationalUnitsID.length; j++){
           if(this.organizationalUnit[i].parentId === organizationalUnitsID[j]){
-            this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
+            this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
             i--;
             break;
           }
@@ -297,7 +266,7 @@ export class OrgChartComponent implements OnInit {
     //     this.employeeService.deleteEmployee(employeeID).subscribe(resp=> console.log('Empleado eliminado!'))
     //   });
     // }
-    this.dibujarDiagram();
+    this.dibujarDiagram(this.employees, this.organizationalUnit);
   }
 
   //Animaciones(Opcional)
