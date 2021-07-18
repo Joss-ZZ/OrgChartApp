@@ -1,6 +1,7 @@
-<div [ngSwitch]="node.data.type">
+<!-- Modo Edición -->
+<div [ngSwitch]="node.data.type" *ngIf="!vista">
 
-    <form autocomplete="off" [formGroup]="miForm" *ngSwitchCase="'COMPANY'">
+    <form class="containerOrg" autocomplete="off" [formGroup]="miForm" *ngSwitchCase="'COMPANY'">
         <div class="img-container">
             <img [src]="node.data.brand" [alt]="node.data.name">
         </div>
@@ -21,5 +22,43 @@
             <input type="text" class="name" formControlName="name" (blur)="update($event.target.value)">
         </div>
     </form>
+
+</div>
+
+<!-- Modo Vista -->
+<div [ngSwitch]="node.data.type" *ngIf="vista">
+
+    <div class="containerOrg" *ngSwitchCase="'COMPANY'">
+        <div class="img-container">
+            <img [src]="node.data.brand" [alt]="node.data.name">
+        </div>
+        <div class="container-info-view">
+            <label for="" class="type">{{node.data.type}}</label>
+            <p>{{node.data.name}}</p>
+        </div>
+        <div class="score company" [ngClass]="(scoreCompany<90)?'malo':(scoreCompany>=90 && scoreCompany<96)?'regular':'bueno'">
+            <div class="score__company">{{scoreCompany}}</div>
+        </div>
+    </div>
+
+    <div class="containerOrg" *ngSwitchDefault>
+        <div class="img-container">
+            <img [src]="node.data.profile" [alt]="node.data.fullname">
+        </div>
+        <div class="container-info-view">
+            <label for="" class="type">{{node.data.position}}</label>
+            <div class="container-info-view__leader">
+                <div class="container-info-view__leader__score" [ngClass]="(scoreLeader<90)?'malo':(scoreLeader>=90 && scoreLeader<96)?'regular':'bueno'">
+                    {{scoreLeader}}
+                </div>
+                <p>{{node.data.fullname}}</p>
+            </div>
+            <label for="" class="type">{{node.data.type}}</label>
+            <p>{{node.data.name}}</p>
+        </div>
+        <div class="score department-team" [ngClass]="(scoreTeamDepartment<90)?'malo':(scoreTeamDepartment>=90 && scoreTeamDepartment<96)?'regular':'bueno'">
+            <div class="score__department-team">{{scoreTeamDepartment}}</div>
+        </div>
+    </div>
 
 </div>

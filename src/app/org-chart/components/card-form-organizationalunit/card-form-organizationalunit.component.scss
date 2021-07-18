@@ -4,6 +4,14 @@ $brand-tam: 140px;
 $color-border: #8A8A8A;
 $color-type: #A1A1A1;
 
+input {
+  width: 100%;
+}
+
+.containerOrg{
+  position: relative;
+}
+
 .img-container{
     border-radius: 50%;
     border: 2px solid $color-border;
@@ -39,4 +47,80 @@ $color-type: #A1A1A1;
   font-weight: 700;
   border: none;
   outline: none;
+}
+
+// Estilos para la vista
+.container-info-view{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 90px 25px 50px;
+  position: relative;
+  font-size: 30px;
+  p{
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  label{
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  &__leader{
+    border-radius: 50%;
+    display: flex;
+    &__score{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      width: 35px; 
+      height: 35px;
+      font-size: 20px;
+      border-radius: 50%;
+      color: #fff;
+      margin-right: 5px;
+    }
+  }
+}
+
+.score{
+  position: absolute;
+  border-radius: 50%;
+  font-size: 25px;
+  font-weight: bold;
+  color: #fff;
+  &__company, &__department-team{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__company{
+    height: 65px;
+    width: 65px;
+  }
+  &__department-team{
+    height: 60px;
+    width: 60px;
+  }
+}
+
+.company{
+  top: 30px;
+  right: 25px;
+}
+.department-team{
+  top: 80px;
+  right: 25px;
+}
+
+// Colores de acuerdo a puntuación
+.malo {
+  background-color: #E5005A;
+}
+.regular {
+  background-color: #E5C700;
+}
+.bueno {
+  background-color: #00E59D;
 }

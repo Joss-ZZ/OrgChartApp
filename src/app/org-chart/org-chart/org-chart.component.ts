@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Edge, Node, Layout } from '@swimlane/ngx-graph';
+import { Edge, Node, Layout, MiniMapPosition } from '@swimlane/ngx-graph';
 import { DagreNodesOnlyLayout } from './customDagreNodesOnly';
 import * as shape from 'd3-shape';
 
@@ -15,6 +15,9 @@ import { OrganizationalunitService } from '../services/organizationalunit.servic
 import { EmployeeService } from '../services/employee.service';
 import { UtilsService } from '../utils/utils.service';
 import { Subject } from 'rxjs';
+import { ITree } from '../interfaces/ITree';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-org-chart',
@@ -23,29 +26,46 @@ import { Subject } from 'rxjs';
 })
 export class OrgChartComponent implements OnInit {
 
+  miFormulario: FormGroup = this.fb.group({
+    search: ['', [Validators.required]]
+  });
+
+  //Variable vista;
+  view;
+  vista: boolean = false;
   variable: number;
+  treeNodes: ITree[] = [];
   organizationalUnit: IOrganizationalUnit[] = [];
   organizationalUnit2: IOrganizationalUnit[] = [];
   employees: IEmployee[] = [];
   employees2: IEmployee[] = [];
+  //Posición del Minimapa
+  MiniMapPosition: MiniMapPosition = MiniMapPosition.UpperLeft;
 
   public nodes: Node[] = [];
   public links: Edge[] = [];
   public layoutSettings = {
-    orientation: 'TB'
+    orientation: 'TB',
   };
+  public animar: boolean = false;
   public curve: any = shape.curveLinear;
   public layout: Layout = new DagreNodesOnlyLayout();
 
   zoomToFit$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
+  panToNode$: Subject<String> = new Subject();
 
   constructor(public dialog: MatDialog,
               private organizationalunitService: OrganizationalunitService,
               private employeeService: EmployeeService,
-              private utilsService: UtilsService) { }
+              private utilsService: UtilsService,
+              private router: Router,
+              private fb: FormBuilder) { 
+                this.view = [innerWidth / 1.3, 400]; 
+              }
 
   ngOnInit(): void {
+    this.vista = (this.router.url.includes('org-chart-view'))?true:false;
     this.variable = 0.1;
     this.organizationalunitService.getOrganizationalUnit()
     .subscribe(resp=> {
@@ -152,27 +172,51 @@ export class OrgChartComponent implements OnInit {
 
   hide(node: Node){
     const idNode = this.utilsService.splitID(node.id);
-    const organizationalUnitsID: number[] = [];
-    const employeesID: number[] = [];
-    let band: boolean = false;
-    for(let i = 0; i<this.organizationalUnit2.length; i++){
-      if(!band && this.organizationalUnit2[i].id === idNode){
-        this.employees2 = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(false, organizationalUnitsID, employeesID, this.organizationalUnit2, i, this.employees2);
-        band = true;
-        continue;
+    let searchTree : ITree[] = [];
+    this.treeNodes = this.treeNodes.filter(treeNode => {
+      if(treeNode.id !== idNode){
+        return treeNode
+      }else{
+        searchTree = this.treeNodes.filter(treeNode=> treeNode.id === idNode);
       }
-      if(band && this.organizationalUnit2[i]){
-        for(let j = 0; j<organizationalUnitsID.length; j++){
-          if(this.organizationalUnit2[i].parentId === organizationalUnitsID[j]){
-            this.employees2 = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit2, i, this.employees2);
-            i--;
-            break;
+    });
+    const found = (searchTree.length>0)?true:false;
+    if(!found){  
+      // Si entra aqui es porque no hay nodos ocultos en el nodo padre. Por esa razón debemos borrar del DOM y almacenarla en memoria
+      const organizationalUnitsID: number[] = [];
+      let iTree: ITree = {id: 0, OrganizationalUnit: [], Employee: []};
+      let band: boolean = false;
+      for(let i = 0; i<this.organizationalUnit2.length; i++){
+        if(!band && this.organizationalUnit2[i].id === idNode){
+          iTree.id = idNode;
+          this.employees2 = this.utilsService.hideShowNodes(false, organizationalUnitsID, this.organizationalUnit2, i, this.employees2, iTree);
+          band = true;
+          continue;
+        }
+        if(band && this.organizationalUnit2[i]){
+          for(let j = 0; j<organizationalUnitsID.length; j++){
+            if(this.organizationalUnit2[i].parentId === organizationalUnitsID[j]){
+              this.employees2 = this.utilsService.hideShowNodes(true, organizationalUnitsID, this.organizationalUnit2, i, this.employees2, iTree);
+              i--;
+              break;
+            }
           }
         }
       }
+      this.treeNodes.push(iTree);
+    }else{
+      // Si entra aqui es porque existe contenido oculto y se debe volver a meter los nodos ocultos al DOM
+      searchTree[0].OrganizationalUnit.forEach(org => {
+        this.organizationalUnit2.push(org);
+      });
+      searchTree[0].Employee.forEach(emp => {
+        this.employees2.push(emp);
+      });
+      // Antes de volve a pintar los nodos en el DOM debemos ordenarlos.
+      this.organizationalUnit2.sort((a,b)=> a.id - b.id);
+      this.employees2.sort((a,b)=> a.id - b.id);
     }
     this.dibujarDiagram(this.employees2, this.organizationalUnit2);
-    
   }
 
   delete(node: Node){
@@ -222,17 +266,17 @@ export class OrgChartComponent implements OnInit {
           return;
         }
 
-        if(resp.res === 0){  // 0 = add COMPANY to array organizationalUnit.
+        if(resp.res === 0){  // 0 = agregar COMPANY al array organizationalUnit.
           this.organizationalUnit.push(resp.organizational);
-        }else if(resp.res === 1){  // 1 = add DEPARTMENT or TEAM to array organizationalUnit and add LEADER to array employees.
+        }else if(resp.res === 1){  // 1 = agregar DEPARTMENT o TEAM al array organizationalUnit y agregar LEADER al array employees.
           this.organizationalUnit.push(resp.organizational);
           this.employees.push(resp.employee);
-        }else if(resp.res === 2){   // 2 = add COLLABORATOR to array employees and update array organizationalUnit
+        }else if(resp.res === 2){   // 2 = agregar COLLABORATOR al array employees y actualizar el array organizationalUnit
           this.employees.push(resp.collaborator);
           const indexOrganizational = this.organizationalUnit.findIndex(organizationalunit => organizationalunit.id === resp.organizational.id);
           this.organizationalUnit[indexOrganizational] = resp.organizational;
         }
-        this.dibujarDiagram(this.employees, this.organizationalUnit); // Draw the changes
+        this.dibujarDiagram(this.employees, this.organizationalUnit); // dibujar los cambios
       });
   }
 
@@ -242,13 +286,13 @@ export class OrgChartComponent implements OnInit {
     let band: boolean = false;
     for(let i = 0; i<this.organizationalUnit.length; i++){
       if(!band && this.organizationalUnit[i].id === idNode){
-        this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
+        this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
         band = true;
       }
       if(band && this.organizationalUnit[i]){
         for(let j = 0; j<organizationalUnitsID.length; j++){
           if(this.organizationalUnit[i].parentId === organizationalUnitsID[j]){
-            this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(true, organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
+            this.employees = this.utilsService.RemoveLeaderAndCollaboratorAndOrganizational(organizationalUnitsID, employeesID, this.organizationalUnit, i, this.employees);
             i--;
             break;
           }
@@ -269,6 +313,14 @@ export class OrgChartComponent implements OnInit {
     this.dibujarDiagram(this.employees, this.organizationalUnit);
   }
 
+  acercar(){
+    this.variable = this.variable + 0.1;
+  }
+
+  alejar(){
+    this.variable = this.variable - 0.1;
+  }
+
   //Animaciones(Opcional)
   animarEliminacion(id: string) {
     return new Promise((resolve, reject)=>{
@@ -280,12 +332,33 @@ export class OrgChartComponent implements OnInit {
     });
   }
 
-  acercar(){
-    this.variable = this.variable + 0.1;
+  animaciones() {
+    this.animar = !this.animar;
   }
 
-  alejar(){
-    this.variable = this.variable - 0.1;
+  onResize(event) {
+    this.view = [event.target.innerWidth / 1.35, 500];
   }
 
+  Buscar(){
+    if(!this.miFormulario.valid){
+      return;
+    }
+    const organizationName = this.utilsService.quitarEspacios(this.miFormulario.get('search').value);
+    const organization = this.organizationalUnit.find(org => org.name.toLowerCase() === organizationName.toLowerCase());
+    if(!organization){
+      return;
+    }
+    this.variable = 0.5;
+    this.panToNode$.next(`organizationalUnit-${organization.id}`);
+  }
+
+  zoom() {
+    return new Promise((resolve, reject)=> {
+      this.variable = 0.5;
+      setTimeout(() => {
+        resolve('')
+      }, 10);
+    })
+  }
 }

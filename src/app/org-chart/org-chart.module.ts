@@ -25,7 +25,13 @@ import { DeleteAlertComponent } from './components/delete-alert/delete-alert.com
     DeleteAlertComponent
   ],
   exports: [
-    OrgChartComponent
+    OrgChartComponent,
+    CardFormOrganizationalunitComponent,
+    AddOrganizationalunitComponent,
+    AddComponent,
+    AddEmployeeComponent,
+    CardFormEmployeeComponent,
+    DeleteAlertComponent
   ],
   imports: [
     CommonModule,

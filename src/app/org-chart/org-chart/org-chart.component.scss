@@ -63,6 +63,16 @@ $btn-guardar:rgb(74,211,149);
           }
         }
   
+        .prueba{
+          background-color: thistle;
+          border: 1px solid #A1A1A1;
+          border-radius: 8px;
+          height: 150px;
+          width: 200px;
+          position: absolute;
+          top: 100%;
+          z-index: 9999999999;
+        }
       }
     }
 
@@ -109,5 +119,79 @@ $btn-guardar:rgb(74,211,149);
 
   .graph-setting{
     display: flex;
-    flex-direction: column;
+  }
+
+  //boton "animaciones"
+  .green, .red{
+    color: #fff;
+  }
+  .green{
+    background-color: green;
+  }
+  .red {
+    background-color: red;
+  }
+
+  // Estilos del layaout
+  .grid {
+    width: 100%;
+    border: 1px solid #E5E7E9;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 10px;
+    &__item{
+      display: flex;
+      justify-content: space-between;
+      grid-column: 1/-1;
+      &__actions{
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        border: 1px solid #DDDDDD;
+        cursor: pointer;
+        margin-right: 5px;
+        i{
+          color: #85929E;
+        }
+      }
+    }
+    &__item:nth-child(1){
+      border-radius: 8px 8px 0 0;
+      padding: 8px 5px;
+      background-color: #E5E7E9;
+    }
+  }
+
+  .actions__container, .search__container{
+    display: flex;
+    justify-content: center;
+  }
+
+  .search__container{
+    border-radius: 8px;
+    input, button {
+      outline: none;
+      padding: 7px;
+      border: none;
+      color: #85929E;
+    }
+    input {
+      border-radius: 8px 0 0 8px;    
+      &::placeholder{
+        color: #85929E;
+      }
+    }
+    button {
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+    }
+
+  }
+
+  .center{
+    left: calc(50% - 26px) !important;
   }

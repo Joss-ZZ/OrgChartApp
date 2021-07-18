@@ -2,7 +2,7 @@ import { IOrganizationalUnit } from './IOrganizationalUnit';
 import { IEmployee } from './IEmployee';
 
 export interface ITree {
-    id: string,
+    id: number,
     OrganizationalUnit: IOrganizationalUnit[],
     Employee: IEmployee[]
 }

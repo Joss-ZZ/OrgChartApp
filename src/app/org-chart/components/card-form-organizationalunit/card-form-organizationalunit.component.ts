@@ -9,14 +9,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CardFormOrganizationalunitComponent implements OnInit {
 
+  scoreCompany: number;
+  scoreTeamDepartment: number;
+  scoreLeader: number;
   miForm!: FormGroup;
   miForm2!: FormGroup;
 
   constructor(private fb: FormBuilder) { }
 
   @Input() node!: Node;
+  @Input() vista: boolean = false;
 
   ngOnInit(): void {
+    this.scoreCompany = Math.floor(Math.random()*(105+1));
+    this.scoreTeamDepartment = Math.floor(Math.random()*(105+1));
+    this.scoreLeader = Math.floor(Math.random()*(105+1));
     if(this.node.data.type === 'COMPANY'){
       this.miForm = this.fb.group({
         // brand: [this.node.data.brand],
